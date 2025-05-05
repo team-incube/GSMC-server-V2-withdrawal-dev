@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
-import { AppRepository } from './app.repository'; // ✅ 이거
+import { AppRepository } from './app.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { StudentDetailEntity } from './entities/student-detail.entity';

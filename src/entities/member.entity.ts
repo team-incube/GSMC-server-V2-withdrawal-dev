@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { MemberRole } from '../domain/constant/member-role.enum';
+import { MemberRole } from '../dto/constant/member-role.enum';
 
 @Entity('tb_member')
 export class MemberEntity {

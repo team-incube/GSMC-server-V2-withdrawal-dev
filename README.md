@@ -1,4 +1,4 @@
-# GSMC-server-V2
+# GSMC-server-V2-withdrawal-dev
 GSM 인증제 관리 서비스 **GSMC**의 개발용 회원탈퇴 API 서버입니다.
 ## 기여를 원한다면?
 #### Commit Message Convention

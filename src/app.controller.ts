@@ -6,7 +6,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Delete('/withdraw/:studentCode')
-  withdraw(@Param('studentCode') studentCode: string): any {
+  withdraw(@Param('studentCode') studentCode: string): object {
     return this.appService.withdraw(studentCode);
   }
 }

@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { AppRepository } from './app.repository';
 
 @Injectable()
 export class AppService {
-  withdraw(studentCode: number): any {
-    studentCode = studentCode + 1;
-    return {
-      code: 200,
-      message: 'Withdrawal successful',
-      data: studentCode,
-    };
+  constructor(private readonly appRepository: AppRepository) {}
+
+  async withdraw(studentCode: string): Promise<any> {
+    if (await this.appRepository.existsByStudentCode(studentCode)) {
+      return this.appRepository.removeMemberAssociationByStudentCode(studentCode);
+    }
   }
 }

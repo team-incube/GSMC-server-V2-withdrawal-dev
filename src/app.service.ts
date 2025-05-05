@@ -2,7 +2,12 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
+  withdraw(studentCode: number): any {
+    studentCode = studentCode + 1;
+    return {
+      code: 200,
+      message: 'Withdrawal successful',
+      data: studentCode,
+    };
   }
 }

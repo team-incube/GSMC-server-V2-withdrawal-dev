@@ -25,15 +25,59 @@ export class AppRepository extends Repository<StudentDetailEntity> {
         relations: ['member'],
       });
 
-      if (!student) {
-        throw new NotFoundException(`Student with code ${studentCode} not found.`);
+      if (!student || !student.member) {
+        throw new NotFoundException(`Student or Member not found for code ${studentCode}`);
       }
+
+      const memberId = student.member.id;
+      await queryRunner.query(
+        `DELETE FROM tb_activity_evidence WHERE evidence_id IN (
+        SELECT e.evidence_id FROM tb_evidence e
+        JOIN tb_score s ON e.score_id = s.score_id
+        WHERE s.member_id = ?
+      )`,
+        [memberId],
+      );
+
+      await queryRunner.query(
+        `DELETE FROM tb_reading_evidence WHERE evidence_id IN (
+        SELECT e.evidence_id FROM tb_evidence e
+        JOIN tb_score s ON e.score_id = s.score_id
+        WHERE s.member_id = ?
+      )`,
+        [memberId],
+      );
+
+      await queryRunner.query(`DELETE FROM tb_certificate WHERE member_id = ?`, [memberId]);
+
+      await queryRunner.query(
+        `DELETE FROM tb_other_evidence WHERE evidence_id IN (
+          SELECT e.evidence_id FROM tb_evidence e
+          JOIN tb_score s ON e.score_id = s.score_id
+          WHERE s.member_id = ?
+        )`,
+        [memberId],
+      );
+
+      await queryRunner.query(
+        `DELETE FROM tb_evidence WHERE score_id IN (
+            SELECT score_id FROM tb_score WHERE member_id = ?
+          )`,
+        [memberId],
+      );
+
+      await queryRunner.query(`DELETE FROM tb_score WHERE member_id = ?`, [memberId]);
+
+      await queryRunner.query(`DELETE FROM tb_homeroom_teacher_detail WHERE member_id = ?`, [
+        memberId,
+      ]);
 
       await queryRunner.manager.update(StudentDetailEntity, { studentCode }, { member: null });
+      await queryRunner.query(`DELETE FROM tb_student_detail WHERE student_code = ?`, [
+        studentCode,
+      ]);
 
-      if (student.member) {
-        await queryRunner.manager.delete(MemberEntity, student.member.id);
-      }
+      await queryRunner.manager.delete(MemberEntity, memberId);
 
       await queryRunner.commitTransaction();
     } catch (err) {

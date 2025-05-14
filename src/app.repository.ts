@@ -73,9 +73,10 @@ export class AppRepository extends Repository<StudentDetailEntity> {
       ]);
 
       await queryRunner.manager.update(StudentDetailEntity, { studentCode }, { member: null });
-      await queryRunner.query(`DELETE FROM tb_student_detail WHERE student_code = ?`, [
-        studentCode,
-      ]);
+      await queryRunner.query(
+        `UPDATE tb_student_detail SET member_id = NULL WHERE student_code = ?`,
+        [studentCode],
+      );
 
       await queryRunner.manager.delete(MemberEntity, memberId);
 

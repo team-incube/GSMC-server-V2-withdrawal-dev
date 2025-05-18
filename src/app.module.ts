@@ -1,7 +1,6 @@
-import { Module } from '@nestjs/common';
+import { Module, OnApplicationBootstrap } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
-import { AppRepository } from './app.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { StudentDetailEntity } from './entities/student-detail.entity';
@@ -27,6 +26,9 @@ import { MemberEntity } from './entities/member.entity';
     TypeOrmModule.forFeature([StudentDetailEntity, MemberEntity]),
   ],
   controllers: [AppController],
-  providers: [AppService, AppRepository],
+  providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements OnApplicationBootstrap {
+  onApplicationBootstrap(): any {
+  }
+}
